@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const itineraryItemSchema = z.object({
-  title: z.string().min(2, "Judul wajib diisi"),
-  item_date: z.string().min(1, "Tanggal wajib diisi"),
+  title: z.string().min(2, "Title is required"),
+  item_date: z.string().min(1, "Date is required"),
   start_time: z.string().optional(),
   end_time: z.string().optional(),
   location: z.string().optional(),

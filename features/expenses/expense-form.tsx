@@ -27,7 +27,7 @@ export function ExpenseForm({ tripId, members }: { tripId: string; members: Trip
   } = useForm<ExpenseInput>({
     resolver: zodResolver(expenseSchema) as unknown as Resolver<ExpenseInput>,
     defaultValues: {
-      category: "Transportasi",
+      category: "Transport",
       split_method: "equal",
       paid_by: memberOptions[0]?.value,
     },
@@ -35,40 +35,40 @@ export function ExpenseForm({ tripId, members }: { tripId: string; members: Trip
 
   return (
     <form action={action} className="grid gap-4 md:grid-cols-3">
-      <FormField label="Nama Pengeluaran" error={errors.name?.message}>
-        <Input {...register("name")} placeholder="Makan siang" />
+      <FormField label="Expense Name" error={errors.name?.message}>
+        <Input {...register("name")} placeholder="Lunch" />
       </FormField>
-      <FormField label="Kategori" error={errors.category?.message}>
+      <FormField label="Category" error={errors.category?.message}>
         <Select options={budgetCategories} {...register("category")} />
       </FormField>
-      <FormField label="Nominal" error={errors.amount?.message}>
+      <FormField label="Amount" error={errors.amount?.message}>
         <CurrencyInput {...register("amount")} />
       </FormField>
-      <FormField label="Dibayar oleh" error={errors.paid_by?.message}>
+      <FormField label="Paid by" error={errors.paid_by?.message}>
         <Select options={memberOptions} {...register("paid_by")} />
       </FormField>
-      <FormField label="Tanggal" error={errors.expense_date?.message}>
+      <FormField label="Date" error={errors.expense_date?.message}>
         <Input type="date" {...register("expense_date")} />
       </FormField>
-      <FormField label="Metode Split" error={errors.split_method?.message}>
+      <FormField label="Split Method" error={errors.split_method?.message}>
         <Select
           options={[
-            { value: "equal", label: "Bagi rata" },
-            { value: "custom", label: "Custom nanti" },
+            { value: "equal", label: "Equal split" },
+            { value: "custom", label: "Custom later" },
           ]}
           {...register("split_method")}
         />
       </FormField>
       <div className="md:col-span-3">
-        <FormField label="Catatan" error={errors.notes?.message}>
-          <Textarea {...register("notes")} placeholder="Opsional." />
+        <FormField label="Notes" error={errors.notes?.message}>
+          <Textarea {...register("notes")} placeholder="Optional." />
         </FormField>
       </div>
       {state.error ? <p className="text-sm font-medium text-red-700 md:col-span-3">{state.error}</p> : null}
       {state.success ? <p className="text-sm font-medium text-primary md:col-span-3">{state.success}</p> : null}
-      <div className="md:col-span-3">
+      <div className="flex justify-end md:col-span-3">
         <Button type="submit" disabled={pending}>
-          {pending ? "Menyimpan..." : "Tambah Pengeluaran"}
+          {pending ? "Saving..." : "Add Expense"}
         </Button>
       </div>
     </form>

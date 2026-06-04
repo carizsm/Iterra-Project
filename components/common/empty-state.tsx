@@ -1,25 +1,28 @@
 import type { LucideIcon } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { SoftReveal } from "@/components/common/motion";
+import { cn } from "@/lib/utils";
 
 export function EmptyState({
   icon: Icon,
   title,
   description,
   action,
+  className,
 }: {
   icon?: LucideIcon;
   title: string;
   description: string;
   action?: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <Card className="flex flex-col items-start gap-3 p-6">
-      {Icon ? <Icon className="h-5 w-5 text-primary" aria-hidden="true" /> : null}
+    <SoftReveal className={cn("flex flex-col items-start gap-3 rounded-lg border border-dashed border-border bg-soft/45 p-6", className)}>
+      {Icon ? <Icon className="h-5 w-5 text-primary/80" aria-hidden="true" /> : null}
       <div className="space-y-1">
         <h2 className="text-base font-semibold">{title}</h2>
         <p className="text-sm text-muted">{description}</p>
       </div>
       {action}
-    </Card>
+    </SoftReveal>
   );
 }

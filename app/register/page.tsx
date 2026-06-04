@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Logo } from "@/components/common/logo";
 import { AuthForm } from "@/features/auth/auth-form";
 import { registerAction } from "@/features/auth/actions";
 
@@ -8,15 +9,16 @@ export default function RegisterPage() {
     <main className="grid min-h-screen place-items-center bg-background px-4 py-10">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Buat akun Iterra</CardTitle>
-          <CardDescription>Mulai workspace trip bersama tim perjalananmu.</CardDescription>
+          <Logo href="/" className="mb-4" />
+          <CardTitle>Create an Iterra account</CardTitle>
+          <CardDescription>Start a trip workspace with your travel group.</CardDescription>
         </CardHeader>
         <CardContent>
           <AuthForm mode="register" action={registerAction} />
           <p className="mt-5 text-sm text-muted">
-            Sudah punya akun?{" "}
+            Already have an account?{" "}
             <Link href="/login" className="font-medium text-primary">
-              Masuk
+              Log in
             </Link>
           </p>
         </CardContent>

@@ -10,12 +10,12 @@ export function JoinTripForm() {
   const [state, action, pending] = useActionState(joinTripAction, {} as ActionState);
   return (
     <form action={action} className="space-y-4">
-      <FormField label="Kode Undangan">
+      <FormField label="Invite Code">
         <Input name="invite_code" placeholder="RINJANI26" className="uppercase" />
       </FormField>
       {state.error ? <p className="text-sm font-medium text-red-700">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? "Bergabung..." : "Gabung Trip"}
+        {pending ? "Joining..." : "Join Trip"}
       </Button>
     </form>
   );

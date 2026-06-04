@@ -8,7 +8,7 @@ export function formatCurrency(amount = 0, currency = "IDR") {
 
 export function formatDate(value?: string | Date | null) {
   if (!value) return "-";
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
     month: "short",
     year: "numeric",

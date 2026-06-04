@@ -1,8 +1,9 @@
-import { Copy, Users } from "lucide-react";
 import { WorkspaceShell } from "@/features/trips/workspace-shell";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { SectionPanel } from "@/components/common/section-panel";
+import { ListRow } from "@/components/common/list-row";
+import { CopyButton } from "@/components/common/copy-button";
+import { MemberAvatarGroup } from "@/components/common/member-avatar-group";
 import { getTripWorkspace, requireUser } from "@/features/trips/data";
 
 export default async function MembersPage({ params }: { params: Promise<{ tripId: string }> }) {
@@ -11,51 +12,42 @@ export default async function MembersPage({ params }: { params: Promise<{ tripId
   const data = await getTripWorkspace(tripId);
 
   return (
-    <WorkspaceShell trip={data.trip} active="members">
-      <section className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
-        <Card>
-          <CardHeader>
-            <CardTitle>Kode Undangan</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="rounded-md border border-dashed border-primary bg-soft p-4">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted">Kode</p>
-              <p className="mt-1 text-2xl font-semibold tracking-wide">{data.trip.invite_code}</p>
+    <WorkspaceShell trip={data.trip} active="members" workspace={data}>
+      <section className="grid gap-5 lg:grid-cols-[0.75fr_1.25fr]">
+        <SectionPanel
+          title="Invite Code"
+          description="Share this code so members can join from the Join Trip page."
+        >
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-dashed border-primary/50 bg-soft p-4 transition-colors duration-200 ease-out hover:border-primary/70 hover:bg-[#EFE7D8]/60">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted">Code</p>
+              <p className="mt-1 break-all text-2xl font-semibold tracking-wide">
+                {data.trip.invite_code}
+              </p>
             </div>
-            <Button variant="outline" className="w-full" type="button">
-              <Copy className="h-4 w-4" /> Salin kode
-            </Button>
-            <p className="text-sm text-muted">Bagikan kode ini agar member bisa bergabung dari halaman Gabung Trip.</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Member Trip</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+            <CopyButton value={data.trip.invite_code} label="Copy code" />
+          </div>
+        </SectionPanel>
+        <SectionPanel title="Travel Party" description="Everyone currently connected to this trip workspace.">
+          <div className="mb-4">
+            <MemberAvatarGroup members={data.members} />
+          </div>
+          <div className="space-y-3">
             {data.members.map((member) => (
-              <div key={member.id} className="flex items-center justify-between rounded-md border border-border p-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-soft font-semibold text-primary">
-                    {(member.profiles?.full_name ?? "M").slice(0, 1).toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="font-medium">{member.profiles?.full_name ?? "Member"}</p>
-                    <p className="text-sm text-muted">{member.user_id}</p>
-                  </div>
-                </div>
-                <Badge variant={member.role === "owner" ? "success" : "secondary"}>{member.role}</Badge>
-              </div>
+              <ListRow
+                key={member.id}
+                title={member.profiles?.full_name ?? "Member"}
+                description={member.role === "owner" ? "Trip owner" : "Trip member"}
+                aside={
+                  <Badge variant={member.role === "owner" ? "success" : "secondary"}>
+                    {member.role === "owner" ? "Owner" : "Member"}
+                  </Badge>
+                }
+              />
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </SectionPanel>
       </section>
-      <Card>
-        <CardContent className="flex items-center gap-3 pt-5 text-sm text-muted">
-          <Users className="h-4 w-4 text-primary" />
-          Owner dapat mengelola member melalui policy Supabase. UI manajemen lanjutan bisa ditambahkan setelah MVP.
-        </CardContent>
-      </Card>
     </WorkspaceShell>
   );
 }

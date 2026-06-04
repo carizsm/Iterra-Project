@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { PlusCircle } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/common/page-header";
 import { TripCard } from "@/components/common/trip-card";
@@ -14,16 +13,14 @@ export default async function TripsPage() {
       <div className="space-y-6">
         <PageHeader
           title="Trips"
-          description="Semua workspace perjalanan yang kamu ikuti."
+          description="All travel workspaces you are part of."
           actions={
             <>
               <Button asChild variant="outline">
-                <Link href="/trips/join">Gabung Trip</Link>
+                <Link href="/trips/join">Join Trip</Link>
               </Button>
               <Button asChild>
-                <Link href="/trips/new">
-                  <PlusCircle className="h-4 w-4" /> Buat Trip
-                </Link>
+                <Link href="/trips/new">Create Trip</Link>
               </Button>
             </>
           }

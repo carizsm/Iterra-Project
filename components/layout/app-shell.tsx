@@ -1,7 +1,6 @@
 import { headers } from "next/headers";
-import { logoutAction } from "@/features/auth/actions";
 import { hasSupabaseEnv } from "@/lib/supabase/env";
-import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/common/logo";
 import { SidebarNav } from "./sidebar-nav";
 import { MobileNav } from "./mobile-nav";
 
@@ -11,35 +10,30 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="flex min-h-screen">
+      <div className="min-h-screen lg:pl-20">
         <SidebarNav activePath={activePath} />
-        <main className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-20 border-b border-border bg-background/90 px-4 py-3 backdrop-blur lg:px-8">
-            <div className="flex items-center justify-between gap-3">
+        <main className="flex min-w-0 flex-1 flex-col lg:h-screen lg:overflow-y-auto">
+          <header className="sticky top-0 z-20 border-b border-border bg-background/95 px-4 py-3 backdrop-blur lg:px-8">
+            <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3">
               <div className="lg:hidden">
-                <p className="text-sm font-semibold">Iterra</p>
-                <p className="text-xs text-muted">Plan, split, remember</p>
+                <Logo compact />
               </div>
               {!hasSupabaseEnv() ? (
                 <p className="hidden text-xs text-muted sm:block">
-                  Mode demo aktif. Hubungkan Supabase untuk data sungguhan.
+                  Demo mode is active. Connect Supabase for live data.
                 </p>
               ) : (
                 <span />
               )}
-              <form action={logoutAction}>
-                <Button variant="outline" size="sm" type="submit">
-                  Logout
-                </Button>
-              </form>
+              <span className="hidden lg:block" />
             </div>
           </header>
-          <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 pb-24 lg:px-8 lg:pb-10">
+          <div className="mx-auto w-full max-w-6xl flex-1 px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-5 sm:pb-[calc(7.5rem+env(safe-area-inset-bottom))] sm:pt-7 lg:px-8 lg:pb-10">
             {children}
           </div>
         </main>
       </div>
-      <MobileNav />
+      <MobileNav activePath={activePath} />
     </div>
   );
 }

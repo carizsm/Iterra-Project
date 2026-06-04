@@ -9,9 +9,9 @@ export function calculateBudgetStatus(targetBudget = 0, estimatedBudget = 0): Bu
 }
 
 export function getBudgetStatusLabel(status: BudgetStatus) {
-  if (status === "over") return "Melebihi target";
-  if (status === "warning") return "Mendekati batas";
-  return "Budget masih aman";
+  if (status === "over") return "Over Budget";
+  if (status === "warning") return "Near Limit";
+  return "Budget on Track";
 }
 
 export function calculateTripDuration(startDate: string, endDate: string) {

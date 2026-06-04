@@ -1,4 +1,3 @@
-import { CalendarDays } from "lucide-react";
 import { formatDateRange } from "@/lib/formatters";
 
 export function DateRangeDisplay({
@@ -9,9 +8,6 @@ export function DateRangeDisplay({
   endDate?: string | null;
 }) {
   return (
-    <span className="inline-flex items-center gap-2 text-sm text-muted">
-      <CalendarDays className="h-4 w-4" aria-hidden="true" />
-      {formatDateRange(startDate, endDate)}
-    </span>
+    <span className="text-sm text-muted">{formatDateRange(startDate, endDate)}</span>
   );
 }

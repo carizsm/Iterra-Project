@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { CalendarDays, CircleDollarSign, PlusCircle, Users } from "lucide-react";
+import { CalendarClock, HandCoins, ReceiptText, Users } from "lucide-react";
 import { WorkspaceShell } from "@/features/trips/workspace-shell";
-import { StatCard } from "@/components/common/stat-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { MemberAvatarGroup } from "@/components/common/member-avatar-group";
 import { BudgetStatusBadge } from "@/components/common/budget-status-badge";
+import { SectionPanel } from "@/components/common/section-panel";
 import { getTripWorkspace, requireUser } from "@/features/trips/data";
 import { formatCurrency, formatDate, formatShortTime } from "@/lib/formatters";
 
@@ -21,70 +20,93 @@ export default async function OverviewPage({ params }: { params: Promise<{ tripI
   const nextItem = data.itinerary[0];
 
   return (
-    <WorkspaceShell trip={data.trip} active="overview">
+    <WorkspaceShell trip={data.trip} active="overview" workspace={data}>
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Target Budget" value={formatCurrency(data.trip.target_budget, data.trip.currency)} icon={CircleDollarSign} />
-        <StatCard label="Estimated Budget" value={formatCurrency(estimated, data.trip.currency)} icon={CircleDollarSign} />
-        <StatCard label="Actual Expenses" value={formatCurrency(actual, data.trip.currency)} icon={CircleDollarSign} />
-        <StatCard label="Members" value={String(data.members.length)} icon={Users} />
+        {[
+          { label: "Target", value: formatCurrency(data.trip.target_budget, data.trip.currency) },
+          { label: "Planned", value: formatCurrency(estimated, data.trip.currency) },
+          { label: "Actual", value: formatCurrency(actual, data.trip.currency) },
+          { label: "Members", value: String(data.members.length) },
+        ].map((metric) => (
+          <div
+            key={metric.label}
+            className="rounded-full bg-paper/75 px-4 py-3 shadow-[inset_0_0_0_1px_#E5DED3]"
+          >
+            <p className="text-xs uppercase tracking-wide text-muted">{metric.label}</p>
+            <p className="mt-1 text-sm font-semibold">{metric.value}</p>
+          </div>
+        ))}
       </section>
-      <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-        <Card>
-          <CardHeader>
-            <CardTitle>Budget Progress</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+
+      <section className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+        <SectionPanel title="Budget Health" description="Planned budget and real spending at a glance.">
+          <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <BudgetStatusBadge targetBudget={data.trip.target_budget} estimatedBudget={estimated} />
               <p className="text-sm font-medium">
-                Selisih {formatCurrency(difference, data.trip.currency)}
+                Difference {formatCurrency(difference, data.trip.currency)}
               </p>
             </div>
             <Progress value={progress} />
             <p className="text-sm text-muted">
-              {formatCurrency(actual, data.trip.currency)} dari target {formatCurrency(data.trip.target_budget, data.trip.currency)}
+              {formatCurrency(actual, data.trip.currency)} of target {formatCurrency(data.trip.target_budget, data.trip.currency)}
             </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Next Itinerary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {nextItem ? (
-              <div className="space-y-2">
-                <p className="font-medium">{nextItem.title}</p>
-                <p className="text-sm text-muted">
-                  {formatDate(nextItem.item_date)} {formatShortTime(nextItem.start_time)}
-                </p>
-                <p className="text-sm text-muted">{nextItem.location}</p>
+          </div>
+        </SectionPanel>
+        <SectionPanel title="Next Up">
+          {nextItem ? (
+            <div className="space-y-2">
+              <div className="flex items-start gap-3">
+                <span className="mt-1 rounded-full bg-soft p-2 text-primary">
+                  <CalendarClock className="h-4 w-4" />
+                </span>
+                <div>
+                  <p className="font-medium">{nextItem.title}</p>
+                  <p className="text-sm text-muted">
+                    {formatDate(nextItem.item_date)} {formatShortTime(nextItem.start_time)}
+                  </p>
+                  <p className="text-sm text-muted">{nextItem.location}</p>
+                </div>
               </div>
-            ) : (
-              <p className="text-sm text-muted">Belum ada itinerary.</p>
-            )}
-          </CardContent>
-        </Card>
+            </div>
+          ) : (
+            <p className="text-sm text-muted">No itinerary yet.</p>
+          )}
+        </SectionPanel>
       </section>
-      <section className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
-        <Card>
-          <CardHeader>
-            <CardTitle>Anggota</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <MemberAvatarGroup members={data.members} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Button asChild variant="outline"><Link href={`/trips/${tripId}/itinerary`}><CalendarDays className="h-4 w-4" /> Add itinerary</Link></Button>
-            <Button asChild variant="outline"><Link href={`/trips/${tripId}/budget`}><PlusCircle className="h-4 w-4" /> Add budget</Link></Button>
-            <Button asChild variant="outline"><Link href={`/trips/${tripId}/expenses`}><CircleDollarSign className="h-4 w-4" /> Add expense</Link></Button>
-            <Button asChild variant="outline"><Link href={`/trips/${tripId}/members`}><Users className="h-4 w-4" /> Invite</Link></Button>
-          </CardContent>
-        </Card>
+
+      <section className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr]">
+        <SectionPanel title="Members">
+          <MemberAvatarGroup members={data.members} />
+        </SectionPanel>
+        <SectionPanel title="Quick Actions" description="Jump to the most common workspace updates.">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/trips/${tripId}/itinerary`}>
+                <CalendarClock className="h-4 w-4" />
+                Itinerary
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/trips/${tripId}/budget`}>
+                <HandCoins className="h-4 w-4" />
+                Budget
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/trips/${tripId}/expenses`}>
+                <ReceiptText className="h-4 w-4" />
+                Expenses
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/trips/${tripId}/members`}>
+                <Users className="h-4 w-4" />
+                Invite
+              </Link>
+            </Button>
+          </div>
+        </SectionPanel>
       </section>
     </WorkspaceShell>
   );

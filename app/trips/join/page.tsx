@@ -9,10 +9,10 @@ export default async function JoinTripPage() {
   return (
     <AppShell>
       <div className="space-y-6">
-        <PageHeader title="Gabung Trip" description="Masukkan kode undangan dari owner trip." />
+        <PageHeader title="Join Trip" description="Enter the invite code from the trip owner." />
         <Card className="max-w-lg">
           <CardHeader>
-            <CardTitle>Kode Undangan</CardTitle>
+            <CardTitle>Invite Code</CardTitle>
           </CardHeader>
           <CardContent>
             <JoinTripForm />

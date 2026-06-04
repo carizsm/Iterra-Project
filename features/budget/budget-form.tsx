@@ -21,30 +21,30 @@ export function BudgetForm({ tripId }: { tripId: string }) {
     formState: { errors },
   } = useForm<BudgetItemInput>({
     resolver: zodResolver(budgetItemSchema) as unknown as Resolver<BudgetItemInput>,
-    defaultValues: { category: "Transportasi", estimated_amount: 0 },
+    defaultValues: { category: "Transport", estimated_amount: 0 },
   });
 
   return (
     <form action={action} className="grid gap-4 md:grid-cols-3">
-      <FormField label="Nama Item" error={errors.name?.message}>
-        <Input {...register("name")} placeholder="Tiket kereta" />
+      <FormField label="Item Name" error={errors.name?.message}>
+        <Input {...register("name")} placeholder="Train ticket" />
       </FormField>
-      <FormField label="Kategori" error={errors.category?.message}>
+      <FormField label="Category" error={errors.category?.message}>
         <Select options={budgetCategories} {...register("category")} />
       </FormField>
-      <FormField label="Estimasi" error={errors.estimated_amount?.message}>
+      <FormField label="Estimate" error={errors.estimated_amount?.message}>
         <CurrencyInput {...register("estimated_amount")} />
       </FormField>
       <div className="md:col-span-3">
-        <FormField label="Catatan" error={errors.notes?.message}>
-          <Textarea {...register("notes")} placeholder="Opsional." />
+        <FormField label="Notes" error={errors.notes?.message}>
+          <Textarea {...register("notes")} placeholder="Optional." />
         </FormField>
       </div>
       {state.error ? <p className="text-sm font-medium text-red-700 md:col-span-3">{state.error}</p> : null}
       {state.success ? <p className="text-sm font-medium text-primary md:col-span-3">{state.success}</p> : null}
-      <div className="md:col-span-3">
+      <div className="flex justify-end md:col-span-3">
         <Button type="submit" disabled={pending}>
-          {pending ? "Menyimpan..." : "Tambah Budget Item"}
+          {pending ? "Saving..." : "Add Budget Item"}
         </Button>
       </div>
     </form>

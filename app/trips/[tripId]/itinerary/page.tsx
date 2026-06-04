@@ -1,11 +1,10 @@
-import { CalendarDays } from "lucide-react";
 import { WorkspaceShell } from "@/features/trips/workspace-shell";
 import { ItineraryForm } from "@/features/itinerary/itinerary-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { ActionDialog } from "@/components/common/action-dialog";
 import { EmptyState } from "@/components/common/empty-state";
+import { TimelineItem } from "@/features/itinerary/timeline-item";
 import { groupItineraryByDate } from "@/lib/calculations/grouping";
-import { formatCurrency, formatDate, formatShortTime } from "@/lib/formatters";
+import { formatDate } from "@/lib/formatters";
 import { getTripWorkspace, requireUser } from "@/features/trips/data";
 
 export default async function ItineraryPage({ params }: { params: Promise<{ tripId: string }> }) {
@@ -15,52 +14,50 @@ export default async function ItineraryPage({ params }: { params: Promise<{ trip
   const grouped = groupItineraryByDate(data.itinerary);
 
   return (
-    <WorkspaceShell trip={data.trip} active="itinerary">
-      <section className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
+    <WorkspaceShell trip={data.trip} active="itinerary" workspace={data}>
+      <section className="space-y-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Journey Timeline</h2>
+            <p className="text-sm text-muted">Plan each day as a simple route, not a spreadsheet.</p>
+          </div>
+          <ActionDialog
+            title="Add Itinerary"
+            description="Add one activity with time, place, cost, and notes."
+            triggerLabel="Add Itinerary"
+          >
+            <ItineraryForm tripId={tripId} />
+          </ActionDialog>
+        </div>
+
         <div className="space-y-4">
           {Object.keys(grouped).length > 0 ? (
             Object.entries(grouped).map(([date, items]) => (
-              <Card key={date}>
-                <CardHeader>
-                  <CardTitle>{formatDate(date)}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+              <section
+                key={date}
+                className="rounded-[1.25rem] bg-paper/70 p-5 shadow-[inset_0_0_0_1px_#E5DED3]"
+              >
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="h-2 w-2 rounded-full bg-accent" />
+                  <h3 className="font-semibold">{formatDate(date)}</h3>
+                  <span className="text-sm text-muted">
+                    {items.length} stop{items.length > 1 ? "s" : ""}
+                  </span>
+                </div>
+                <div className="relative space-y-4 before:absolute before:bottom-2 before:left-[5px] before:top-4 before:w-px before:bg-border">
                   {items.map((item) => (
-                    <div key={item.id} className="border-l-2 border-primary pl-4">
-                      <div className="flex flex-wrap items-start justify-between gap-2">
-                        <div>
-                          <p className="font-medium">{item.title}</p>
-                          <p className="text-sm text-muted">
-                            {formatShortTime(item.start_time)} {item.end_time ? `- ${formatShortTime(item.end_time)}` : ""} · {item.location}
-                          </p>
-                        </div>
-                        <Badge>{item.status}</Badge>
-                      </div>
-                      {item.notes ? <p className="mt-2 text-sm text-muted">{item.notes}</p> : null}
-                      {Number(item.estimated_cost) > 0 ? (
-                        <p className="mt-2 text-sm font-medium">{formatCurrency(item.estimated_cost, data.trip.currency)}</p>
-                      ) : null}
-                    </div>
+                    <TimelineItem key={item.id} item={item} currency={data.trip.currency} />
                   ))}
-                </CardContent>
-              </Card>
+                </div>
+              </section>
             ))
           ) : (
             <EmptyState
-              icon={CalendarDays}
-              title="Belum ada itinerary"
-              description="Mulai susun rencana perjalananmu per tanggal dan lokasi."
+              title="No itinerary yet"
+              description="Start shaping the journey by date, time, and location."
             />
           )}
         </div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Tambah Itinerary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ItineraryForm tripId={tripId} />
-          </CardContent>
-        </Card>
       </section>
     </WorkspaceShell>
   );

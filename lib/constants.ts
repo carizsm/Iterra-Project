@@ -1,16 +1,8 @@
-import {
-  BarChart3,
-  CalendarDays,
-  CircleDollarSign,
-  Home,
-  PlusCircle,
-  Settings,
-  Users,
-} from "lucide-react";
+import { CalendarDays, Home, PlusCircle, Settings } from "lucide-react";
 
 export const APP_NAME = "Iterra";
 export const TAGLINE = "Plan, split, and remember every journey.";
-export const TAGLINE_ID = "Rencanakan, bagi biaya, dan catat setiap perjalanan.";
+export const TAGLINE_ID = "Plan your route, split costs, and keep every journey remembered.";
 
 export const tripTypes = [
   { value: "solo", label: "Solo" },
@@ -22,34 +14,34 @@ export const tripTypes = [
 ] as const;
 
 export const itineraryStatuses = [
-  { value: "planned", label: "Direncanakan" },
-  { value: "done", label: "Selesai" },
-  { value: "skipped", label: "Dilewati" },
+  { value: "planned", label: "Planned" },
+  { value: "done", label: "Done" },
+  { value: "skipped", label: "Skipped" },
 ] as const;
 
 export const budgetCategories = [
-  "Transportasi",
-  "Akomodasi",
-  "Makan",
-  "Tiket & Retribusi",
-  "Sewa Alat",
+  "Transport",
+  "Accommodation",
+  "Food",
+  "Tickets & Fees",
+  "Gear Rental",
   "Emergency Fund",
-  "Oleh-oleh",
-  "Lain-lain",
+  "Souvenirs",
+  "Other",
 ] as const;
 
 export const appNavItems = [
-  { href: "/dashboard", label: "Dashboard", icon: Home },
-  { href: "/trips", label: "Trips", icon: CalendarDays },
-  { href: "/trips/new", label: "Create Trip", icon: PlusCircle },
-  { href: "/profile", label: "Settings", icon: Settings },
+  { href: "/dashboard", label: "Dashboard", mobileLabel: "Home", icon: Home },
+  { href: "/trips", label: "Trips", mobileLabel: "Trips", icon: CalendarDays },
+  { href: "/trips/new", label: "Create Trip", mobileLabel: "Create", icon: PlusCircle },
+  { href: "/profile", label: "Settings", mobileLabel: "Profile", icon: Settings },
 ] as const;
 
 export const workspaceNavItems = [
-  { segment: "overview", label: "Overview", icon: BarChart3 },
-  { segment: "itinerary", label: "Itinerary", icon: CalendarDays },
-  { segment: "budget", label: "Budget", icon: CircleDollarSign },
-  { segment: "expenses", label: "Expenses", icon: CircleDollarSign },
-  { segment: "members", label: "Members", icon: Users },
-  { segment: "review", label: "Review", icon: Settings },
+  { segment: "overview", label: "Overview" },
+  { segment: "itinerary", label: "Itinerary" },
+  { segment: "budget", label: "Budget" },
+  { segment: "expenses", label: "Expenses" },
+  { segment: "members", label: "Members" },
+  { segment: "review", label: "Review" },
 ] as const;

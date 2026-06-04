@@ -26,37 +26,37 @@ export function ItineraryForm({ tripId }: { tripId: string }) {
 
   return (
     <form action={action} className="grid gap-4 md:grid-cols-2">
-      <FormField label="Judul" error={errors.title?.message}>
-        <Input {...register("title")} placeholder="Tiba di destinasi" />
+      <FormField label="Title" error={errors.title?.message}>
+        <Input {...register("title")} placeholder="Arrive at the destination" />
       </FormField>
-      <FormField label="Tanggal" error={errors.item_date?.message}>
+      <FormField label="Date" error={errors.item_date?.message}>
         <Input type="date" {...register("item_date")} />
       </FormField>
-      <FormField label="Mulai" error={errors.start_time?.message}>
+      <FormField label="Start" error={errors.start_time?.message}>
         <Input type="time" {...register("start_time")} />
       </FormField>
-      <FormField label="Selesai" error={errors.end_time?.message}>
+      <FormField label="End" error={errors.end_time?.message}>
         <Input type="time" {...register("end_time")} />
       </FormField>
-      <FormField label="Lokasi" error={errors.location?.message}>
-        <Input {...register("location")} placeholder="Stasiun, bandara, atau titik kumpul" />
+      <FormField label="Location" error={errors.location?.message}>
+        <Input {...register("location")} placeholder="Station, airport, or meeting point" />
       </FormField>
-      <FormField label="Estimasi Biaya" error={errors.estimated_cost?.message}>
+      <FormField label="Estimated Cost" error={errors.estimated_cost?.message}>
         <CurrencyInput {...register("estimated_cost")} />
       </FormField>
       <FormField label="Status" error={errors.status?.message}>
         <Select options={itineraryStatuses} {...register("status")} />
       </FormField>
       <div className="md:col-span-2">
-        <FormField label="Catatan" error={errors.notes?.message}>
-          <Textarea {...register("notes")} placeholder="Detail singkat yang perlu diingat." />
+        <FormField label="Notes" error={errors.notes?.message}>
+          <Textarea {...register("notes")} placeholder="Short details to remember." />
         </FormField>
       </div>
       {state.error ? <p className="text-sm font-medium text-red-700 md:col-span-2">{state.error}</p> : null}
       {state.success ? <p className="text-sm font-medium text-primary md:col-span-2">{state.success}</p> : null}
-      <div className="md:col-span-2">
+      <div className="flex justify-end md:col-span-2">
         <Button type="submit" disabled={pending}>
-          {pending ? "Menyimpan..." : "Tambah Itinerary"}
+          {pending ? "Saving..." : "Add Itinerary"}
         </Button>
       </div>
     </form>

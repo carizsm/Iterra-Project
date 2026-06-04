@@ -12,7 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SectionPanel } from "@/components/common/section-panel";
 import { formatCurrency } from "@/lib/formatters";
 
 const colors = ["#315846", "#C86B4A", "#7C8C72", "#D6A56D", "#53606A", "#9E7B61"];
@@ -32,28 +32,22 @@ export function TripCharts({
 }) {
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      <Card>
-        <CardHeader>
-          <CardTitle>Planned vs Actual</CardTitle>
-        </CardHeader>
-        <CardContent className="h-64">
+      <SectionPanel title="Planned vs Actual">
+        <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={[{ name: "Budget", planned, actual }]}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5DED3" />
               <XAxis dataKey="name" />
               <YAxis tickFormatter={(value) => `${Number(value) / 1000}k`} />
               <Tooltip formatter={(value) => formatCurrency(Number(value), currency)} />
-              <Bar dataKey="planned" fill="#315846" name="Rencana" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="actual" fill="#C86B4A" name="Aktual" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="planned" fill="#315846" name="Planned" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="actual" fill="#C86B4A" name="Actual" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Pengeluaran per Kategori</CardTitle>
-        </CardHeader>
-        <CardContent className="h-64">
+        </div>
+      </SectionPanel>
+      <SectionPanel title="By Category">
+        <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie data={categoryData} dataKey="value" nameKey="name" outerRadius={82}>
@@ -64,25 +58,22 @@ export function TripCharts({
               <Tooltip formatter={(value) => formatCurrency(Number(value), currency)} />
             </PieChart>
           </ResponsiveContainer>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Biaya per Member</CardTitle>
-        </CardHeader>
-        <CardContent className="h-64">
+        </div>
+      </SectionPanel>
+      <SectionPanel title="By Member">
+        <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={memberData} layout="vertical" margin={{ left: 24 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5DED3" />
               <XAxis type="number" hide />
               <YAxis dataKey="name" type="category" width={72} />
               <Tooltip formatter={(value) => formatCurrency(Number(value), currency)} />
-              <Bar dataKey="paid" fill="#315846" name="Dibayar" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="paid" fill="#315846" name="Paid" radius={[0, 4, 4, 0]} />
               <Bar dataKey="share" fill="#C86B4A" name="Share" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
-        </CardContent>
-      </Card>
+        </div>
+      </SectionPanel>
     </div>
   );
 }

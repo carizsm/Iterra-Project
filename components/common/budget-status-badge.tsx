@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { calculateBudgetStatus, getBudgetStatusLabel } from "@/lib/calculations/budget";
+import { SoftReveal } from "@/components/common/motion";
 
 export function BudgetStatusBadge({
   targetBudget,
@@ -10,5 +11,9 @@ export function BudgetStatusBadge({
 }) {
   const status = calculateBudgetStatus(targetBudget, estimatedBudget);
   const variant = status === "over" ? "danger" : status === "warning" ? "warning" : "success";
-  return <Badge variant={variant}>{getBudgetStatusLabel(status)}</Badge>;
+  return (
+    <SoftReveal className="inline-flex">
+      <Badge variant={variant}>{getBudgetStatusLabel(status)}</Badge>
+    </SoftReveal>
+  );
 }

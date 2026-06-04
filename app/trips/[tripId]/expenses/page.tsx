@@ -1,11 +1,11 @@
-import { CircleDollarSign } from "lucide-react";
 import { WorkspaceShell } from "@/features/trips/workspace-shell";
 import { ExpenseForm } from "@/features/expenses/expense-form";
 import { TripCharts } from "@/features/analytics/trip-charts";
-import { StatCard } from "@/components/common/stat-card";
-import { ExpenseCategoryBadge } from "@/components/common/expense-category-badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatCurrency, formatDate } from "@/lib/formatters";
+import { ActionDialog } from "@/components/common/action-dialog";
+import { SectionPanel } from "@/components/common/section-panel";
+import { SettlementSummary } from "@/features/expenses/settlement-summary";
+import { ExpenseList } from "@/features/expenses/expense-list";
+import { formatCurrency } from "@/lib/formatters";
 import { groupExpensesByCategory } from "@/lib/calculations/grouping";
 import { calculateSplitBalances, generateSettlementSuggestions } from "@/lib/calculations/split";
 import { getTripWorkspace, requireUser } from "@/features/trips/data";
@@ -46,93 +46,47 @@ export default async function ExpensesPage({ params }: { params: Promise<{ tripI
   }));
 
   return (
-    <WorkspaceShell trip={data.trip} active="expenses">
-      <section className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Total Actual" value={formatCurrency(actual, data.trip.currency)} icon={CircleDollarSign} />
-        <StatCard label="Planned Budget" value={formatCurrency(estimated, data.trip.currency)} icon={CircleDollarSign} />
-        <StatCard label="Selisih" value={formatCurrency(estimated - actual, data.trip.currency)} icon={CircleDollarSign} />
-      </section>
-      <Card>
-        <CardHeader>
-          <CardTitle>Ringkasan Patungan</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-4 lg:grid-cols-2">
-          <div className="space-y-3">
-            {balances.map((balance) => (
-              <div key={balance.memberId} className="flex items-center justify-between rounded-md border border-border p-3">
-                <div>
-                  <p className="font-medium">{balance.name}</p>
-                  <p className="text-sm text-muted">
-                    Bayar {formatCurrency(balance.paid, data.trip.currency)} · Share {formatCurrency(balance.owedShare, data.trip.currency)}
-                  </p>
-                </div>
-                <p className="text-sm font-semibold">{formatCurrency(balance.net, data.trip.currency)}</p>
-              </div>
-            ))}
-          </div>
-          <div className="rounded-md bg-soft p-4">
-            <p className="mb-3 font-medium">Settlement suggestions</p>
-            {settlements.length > 0 ? (
-              <div className="space-y-2">
-                {settlements.map((settlement) => (
-                  <p key={`${settlement.fromMemberId}-${settlement.toMemberId}`} className="text-sm text-muted">
-                    {settlement.fromName} perlu membayar {settlement.toName} sebesar{" "}
-                    <span className="font-semibold text-foreground">
-                      {formatCurrency(settlement.amount, data.trip.currency)}
-                    </span>
-                  </p>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted">Belum ada selisih patungan yang perlu diselesaikan.</p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-      <TripCharts
-        currency={data.trip.currency}
-        planned={estimated}
-        actual={actual}
-        categoryData={categoryData}
-        memberData={memberData}
-      />
-      <section className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
-        <Card>
-          <CardHeader>
-            <CardTitle>Daftar Pengeluaran</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {data.expenses.map((expense) => {
-              const payer = data.members.find((member) => member.user_id === expense.paid_by);
-              return (
-                <div key={expense.id} className="rounded-md border border-border p-3">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="font-medium">{expense.name}</p>
-                      <p className="text-sm text-muted">
-                        {formatDate(expense.expense_date)} · Dibayar {payer?.profiles?.full_name ?? "Member"}
-                      </p>
-                    </div>
-                    <p className="text-sm font-semibold">{formatCurrency(expense.amount, data.trip.currency)}</p>
-                  </div>
-                  <div className="mt-3 flex items-center gap-2">
-                    <ExpenseCategoryBadge category={expense.category} />
-                    <span className="text-xs text-muted">{expense.split_method === "equal" ? "Bagi rata" : "Custom"}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Tambah Pengeluaran</CardTitle>
-          </CardHeader>
-          <CardContent>
+    <WorkspaceShell trip={data.trip} active="expenses" workspace={data}>
+      <SectionPanel
+        title="Expense Snapshot"
+        description="Track actual spending without turning the trip into an accounting page."
+        action={
+          <ActionDialog
+            title="Add Expense"
+            description="Record who paid, the amount, and how it should be split."
+            triggerLabel="Add Expense"
+          >
             <ExpenseForm tripId={tripId} members={data.members} />
-          </CardContent>
-        </Card>
-      </section>
+          </ActionDialog>
+        }
+      >
+        <div className="grid gap-3 text-sm sm:grid-cols-3">
+          <p><span className="text-muted">Actual:</span> <span className="font-medium">{formatCurrency(actual, data.trip.currency)}</span></p>
+          <p><span className="text-muted">Planned:</span> <span className="font-medium">{formatCurrency(estimated, data.trip.currency)}</span></p>
+          <p><span className="text-muted">Difference:</span> <span className="font-medium">{formatCurrency(estimated - actual, data.trip.currency)}</span></p>
+        </div>
+      </SectionPanel>
+
+      <SectionPanel
+        title="Shared Cost Summary"
+        description="Positive net means a member paid more than their share. Negative net means they still owe."
+      >
+        <SettlementSummary balances={balances} settlements={settlements} currency={data.trip.currency} />
+      </SectionPanel>
+
+      {data.expenses.length > 0 ? (
+        <TripCharts
+          currency={data.trip.currency}
+          planned={estimated}
+          actual={actual}
+          categoryData={categoryData}
+          memberData={memberData}
+        />
+      ) : null}
+
+      <SectionPanel title="Expense List">
+        <ExpenseList expenses={data.expenses} members={data.members} currency={data.trip.currency} />
+      </SectionPanel>
     </WorkspaceShell>
   );
 }

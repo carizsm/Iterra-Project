@@ -30,10 +30,10 @@ export function AuthForm({
   return (
     <form action={formAction} className="space-y-4">
       {isRegister ? (
-        <FormField label="Nama lengkap" error={errors.full_name?.message}>
+        <FormField label="Full Name" error={errors.full_name?.message}>
           <Input
             autoComplete="name"
-            {...register("full_name", { required: "Nama lengkap wajib diisi" })}
+            {...register("full_name", { required: "Full name is required" })}
           />
         </FormField>
       ) : null}
@@ -56,7 +56,7 @@ export function AuthForm({
       </FormField>
       {state.error ? <p className="text-sm font-medium text-red-700">{state.error}</p> : null}
       <Button className="w-full" type="submit" disabled={pending}>
-        {pending ? "Memproses..." : isRegister ? "Daftar" : "Masuk"}
+        {pending ? "Processing..." : isRegister ? "Register" : "Log In"}
       </Button>
     </form>
   );

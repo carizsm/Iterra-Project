@@ -63,7 +63,7 @@ export async function joinTripAction(_: ActionState, formData: FormData): Promis
     .select("id")
     .eq("invite_code", parsed.data.invite_code.toUpperCase())
     .single();
-  if (error || !trip) return { error: "Kode undangan tidak ditemukan" };
+  if (error || !trip) return { error: "Invite code was not found" };
 
   const memberResult = await supabase
     .from("trip_members")
@@ -75,7 +75,7 @@ export async function joinTripAction(_: ActionState, formData: FormData): Promis
 export async function addItineraryAction(tripId: string, _: ActionState, formData: FormData) {
   const parsed = itineraryItemSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
-  if (!hasSupabaseEnv()) return { success: "Mode demo: item itinerary tervalidasi." };
+  if (!hasSupabaseEnv()) return { success: "Demo mode: itinerary item validated." };
 
   const user = await requireUser();
   const supabase = await createClient();
@@ -84,13 +84,13 @@ export async function addItineraryAction(tripId: string, _: ActionState, formDat
     .insert({ ...parsed.data, trip_id: tripId, created_by: user.id });
   if (error) return { error: error.message };
   revalidatePath(`/trips/${tripId}/itinerary`);
-  return { success: "Itinerary ditambahkan." };
+  return { success: "Itinerary added." };
 }
 
 export async function addBudgetItemAction(tripId: string, _: ActionState, formData: FormData) {
   const parsed = budgetItemSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
-  if (!hasSupabaseEnv()) return { success: "Mode demo: budget tervalidasi." };
+  if (!hasSupabaseEnv()) return { success: "Demo mode: budget item validated." };
 
   const user = await requireUser();
   const supabase = await createClient();
@@ -99,13 +99,13 @@ export async function addBudgetItemAction(tripId: string, _: ActionState, formDa
     .insert({ ...parsed.data, trip_id: tripId, created_by: user.id });
   if (error) return { error: error.message };
   revalidatePath(`/trips/${tripId}/budget`);
-  return { success: "Budget ditambahkan." };
+  return { success: "Budget added." };
 }
 
 export async function addExpenseAction(tripId: string, _: ActionState, formData: FormData) {
   const parsed = expenseSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
-  if (!hasSupabaseEnv()) return { success: "Mode demo: pengeluaran tervalidasi." };
+  if (!hasSupabaseEnv()) return { success: "Demo mode: expense validated." };
 
   const user = await requireUser();
   const supabase = await createClient();
@@ -114,13 +114,13 @@ export async function addExpenseAction(tripId: string, _: ActionState, formData:
     .insert({ ...parsed.data, trip_id: tripId, created_by: user.id });
   if (error) return { error: error.message };
   revalidatePath(`/trips/${tripId}/expenses`);
-  return { success: "Pengeluaran ditambahkan." };
+  return { success: "Expense added." };
 }
 
 export async function saveReviewAction(tripId: string, _: ActionState, formData: FormData) {
   const parsed = tripReviewSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
-  if (!hasSupabaseEnv()) return { success: "Mode demo: review tervalidasi." };
+  if (!hasSupabaseEnv()) return { success: "Demo mode: review validated." };
 
   const user = await requireUser();
   const supabase = await createClient();
@@ -129,5 +129,5 @@ export async function saveReviewAction(tripId: string, _: ActionState, formData:
     .upsert({ ...parsed.data, trip_id: tripId, user_id: user.id });
   if (error) return { error: error.message };
   revalidatePath(`/trips/${tripId}/review`);
-  return { success: "Review disimpan." };
+  return { success: "Review saved." };
 }
