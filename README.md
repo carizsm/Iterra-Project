@@ -1,76 +1,29 @@
 # Iterra
 
-Iterra is a web-first collaborative trip workspace for planning itineraries, managing shared budgets, tracking expenses, splitting costs, and reviewing trips after the journey.
+Iterra is a collaborative travel workspace for planning trips, managing shared budgets, tracking expenses, splitting costs, and keeping a simple record of each journey. It is designed for travelers who want one calm place to organize where they are going, what they plan to do, how much they expect to spend, and how the actual trip turns out.
 
-## Stack
+The product combines itinerary planning, budget planning, expense tracking, member collaboration, equal split calculations, and post-trip review into a single workspace. A trip in Iterra is not just a list of destinations. It includes the plan, the people, the budget, the real spending, and a short reflection after the journey.
 
-- Next.js App Router
-- TypeScript
-- Tailwind CSS
-- shadcn/ui-style local components
-- lucide-react
-- React Hook Form
-- Zod
-- Recharts
-- Supabase Auth and PostgreSQL
+## Product Focus
 
-## Getting Started
+Iterra is built around a few core workflows:
 
-Install dependencies:
+- Create and manage trip workspaces
+- Plan itinerary items by date, time, and location
+- Estimate trip budgets by category
+- Track actual expenses during the trip
+- Split shared costs between members
+- Review the trip after it ends
+- Compare planned budget against real spending
 
-```bash
-npm install
-```
+The experience is intentionally minimal and travel-oriented. The interface uses a warm earthy palette, subtle motion, compact layouts, and lightweight travel illustrations so the app feels like a focused travel productivity tool rather than a generic admin dashboard.
 
-Create `.env.local`:
+## MVP Scope
 
-```bash
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+The current version focuses on the core planning and budgeting flow. It includes authentication-ready screens, trip creation, trip dashboard, itinerary, budget planner, expense tracker, members, split-cost summary, and trip review.
 
-Run the app:
+Features such as payment processing, booking, AI recommendations, complex maps, social feeds, native mobile apps, and full offline sync are outside the current MVP scope.
 
-```bash
-npm run dev
-```
+## Technology
 
-Open `http://localhost:3000`.
-
-Without Supabase environment variables, the app runs in demo mode so the main screens can be reviewed.
-
-## Supabase Setup
-
-Run the SQL migration in `supabase/migrations/001_iterra_schema.sql` from the Supabase SQL editor or through the Supabase CLI.
-
-The migration creates:
-
-- `profiles`
-- `trips`
-- `trip_members`
-- `itinerary_items`
-- `budget_items`
-- `expenses`
-- `expense_splits`
-- `trip_reviews`
-
-It also enables Row Level Security and adds starter policies so users can only access trips where they are members.
-
-## Main Routes
-
-- `/login`
-- `/register`
-- `/dashboard`
-- `/trips`
-- `/trips/new`
-- `/trips/join`
-- `/trips/[tripId]/overview`
-- `/trips/[tripId]/itinerary`
-- `/trips/[tripId]/budget`
-- `/trips/[tripId]/expenses`
-- `/trips/[tripId]/members`
-- `/trips/[tripId]/review`
-
-## Product Notes
-
-The MVP prioritizes a calm trip workspace, shared budgeting, equal split calculations, settlement suggestions, and post-trip review. Payment gateway, AI recommendations, native mobile, offline sync, booking, social feed, and complex map routing are intentionally out of scope.
+Iterra is a web-first application built with Next.js, TypeScript, Tailwind CSS, React Hook Form, Zod, Recharts, Framer Motion, and Supabase for authentication and database support.
